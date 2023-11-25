@@ -8,6 +8,18 @@
   font-family: Inter;
 }
 
+.label {
+  line-height: 1.4rem;
+  font-size: 0.8rem;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .text_input {
   width: 100%;
   padding: 1rem;

@@ -17,7 +17,7 @@ export default function PromptForm({ onSubmit, isLoading }) {
         setPrompt("");
       }}
     >
-      <input
+      <textarea
         className={styles.input}
         placeholder="Paste your CV Here"
         type="text"

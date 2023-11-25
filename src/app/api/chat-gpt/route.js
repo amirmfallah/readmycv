@@ -12,8 +12,7 @@ export async function POST(request) {
     messages: [
       {
         role: "user",
-        content:
-          "I will send you my CV, based on my CV create a readme file for my github profile.",
+        content: `I will send you my CV, based on my CV create a beutiful github profile readme file with emojies. Include github stats widgets with user profile ${params.github}`,
       },
       {
         role: "user",

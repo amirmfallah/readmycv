@@ -2,7 +2,6 @@
 import styles from "./page.module.css";
 import { useState } from "react";
 import PromptForm from "@/components/PromptForm";
-import Markdown from "react-markdown";
 
 function download(filename, text) {
   var element = document.createElement("a");
@@ -20,9 +19,12 @@ function download(filename, text) {
   document.body.removeChild(element);
 }
 
+import MDEditor from "@uiw/react-md-editor";
+
 export default function Home() {
   const [choices, setChoices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [value, setValue] = useState("");
 
   return (
     <main className={styles.main}>
@@ -31,7 +33,7 @@ export default function Home() {
         <p>Turn your CV into a beautiful Github README in a click</p>
         <PromptForm
           isLoading={isLoading}
-          onSubmit={async (prompt) => {
+          onSubmit={async ({ prompt, github }) => {
             setIsLoading(true);
             const response = await fetch("/api/chat-gpt", {
               method: "POST",
@@ -40,31 +42,33 @@ export default function Home() {
               },
               body: JSON.stringify({
                 prompt,
+                github,
               }),
             });
 
             setIsLoading(false);
             const result = await response.json();
             setChoices(result.choices);
+            setValue(result.choices[0].message.content);
           }}
         />
-
-        {choices.map((choice) => {
-          return (
-            <div className={styles.response}>
-              <div className={styles.actions}>
-                <div
-                  className={styles.downloadButton}
-                  onClick={() => download("README.md", choice.message.content)}
-                >
-                  Download
-                </div>
-              </div>
-              <Markdown>{choice.message.content}</Markdown>
-            </div>
-          );
-        })}
       </div>
+      {choices.map((choice) => {
+        return (
+          <div className={styles.response}>
+            <div className={styles.actions}>
+              <h3>Your README.md is generated now</h3>
+              <div
+                className={styles.downloadButton}
+                onClick={() => download("README.md", value)}
+              >
+                Download
+              </div>
+            </div>
+            <MDEditor height={480} value={value} onChange={setValue} />
+          </div>
+        );
+      })}
     </main>
   );
 }
